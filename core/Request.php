@@ -1,21 +1,74 @@
 <?php
 class Request
 {
-  //todo リクエストがPOSTか判定
+  //リクエストがPOSTか判定
+  public function isPost() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  //リクエスト$_GETを取得して返す
+  public function getGet($name) {
+    if(isset($_GET[$name])) {
+    return $_GET[$name];
+  }
+    return null;
+  }
 
-  //todo リクエスト$_GETを取得して返す
+  //リクエスト$_POSTを取得して返す
+  public function getPost($name) {
+    if(isset($_POST[$name])) {
+      return $_POST[$name];
+  }
+  return null;
+}
 
-  //todo リクエスト$_POSTを取得して返す
-
-  //todo HOSTを返す、ない場合はサーバ名を返す
+  // HOSTを返す、ない場合はサーバ名を返す
+  public function getHost() {
+    if (isset($_SERVER['HTTP_HOST'])) {
+      return $_SERVER['HTTP_HOST'];
+    }
+    return $_SERVER['SERVER_NAME'];
+  }
 
   //todo sslか判定
+  public function isSsl() {
+    if ($_SERVER['HTTPS'] !== null) {
+      return true;
+    }
+    return false;
+  }
 
-  //todo uriを取得して返す
+  //uriを取得して返す
+  public function getUri() {
+    return $_SERVER['REQUEST_URI'];
+  }
 
-  //todo urlを取得して返す
+  //ベースURLを返す
+  //注:ベースURLはこのアプリに置ける造語。ホスト部分より後ろからフロントコントローラまでの値のこと
+  public function baseUrl() {
+    $script_name = $_SEVER['SCRIPT_NAME'];
+    $request_uri = $this->getUri();
 
-  //todo ベースURLを返す
+    if (strpos($request_uri, $script_name === 0)) {
+        return $script_name;
+    } else if (strpos($request_uri, dirname($script_name) === 0)) {
+      return rtrim(dirname($script_name), '/');
+    }
+    return "";
+  }
 
-  //todo ファイルパスの取得
+  //ファイルパスの取得
+public function getPathInfo() {
+  // リクエストからベースUrlと?以下を取り除く
+  $request_uri = $this->getUri();
+  $base_url = $this->baseUrl();
+  if(strpos($request_uri, '?') !== false){
+  $hoge = strstr($request_uri, '?', false );
+  return $path_info = ltrim(rtrim($request_uri, $hoge), $base_url);
+}
+return $path_info = ltrim($request_uri, $base_url);
+}
 }
