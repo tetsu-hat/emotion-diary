@@ -12,8 +12,8 @@ class Request
   //リクエスト$_GETを取得して返す
   public function getGet($name) {
     if(isset($_GET[$name])) {
-    return $_GET[$name];
-  }
+      return $_GET[$name];
+    }
     return null;
   }
 
@@ -21,9 +21,9 @@ class Request
   public function getPost($name) {
     if(isset($_POST[$name])) {
       return $_POST[$name];
+    }
+    return null;
   }
-  return null;
-}
 
   // HOSTを返す、ない場合はサーバ名を返す
   public function getHost() {
@@ -33,7 +33,7 @@ class Request
     return $_SERVER['SERVER_NAME'];
   }
 
-  //todo sslか判定
+  //sslか判定
   public function isSsl() {
     if ($_SERVER['HTTPS'] !== null) {
       return true;
@@ -53,7 +53,7 @@ class Request
     $request_uri = $this->getUri();
 
     if (strpos($request_uri, $script_name === 0)) {
-        return $script_name;
+      return $script_name;
     } else if (strpos($request_uri, dirname($script_name) === 0)) {
       return rtrim(dirname($script_name), '/');
     }
@@ -61,14 +61,14 @@ class Request
   }
 
   //ファイルパスの取得
-public function getPathInfo() {
-  // リクエストからベースUrlと?以下を取り除く
-  $request_uri = $this->getUri();
-  $base_url = $this->baseUrl();
-  if(strpos($request_uri, '?') !== false){
-  $hoge = strstr($request_uri, '?', false );
-  return $path_info = ltrim(rtrim($request_uri, $hoge), $base_url);
-}
-return $path_info = ltrim($request_uri, $base_url);
-}
+  public function getPathInfo() {
+    // リクエストからベースUrlと?以下を取り除く
+    $request_uri = $this->getUri();
+    $base_url = $this->baseUrl();
+    if(strpos($request_uri, '?') !== false){
+      $hoge = strstr($request_uri, '?', false );
+      return $path_info = ltrim(rtrim($request_uri, $hoge), $base_url);
+    }
+    return $path_info = ltrim($request_uri, $base_url);
+  }
 }
