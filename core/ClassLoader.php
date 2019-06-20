@@ -16,7 +16,7 @@ class ClassLoader
     foreach($this->directories as $directory) {
       $file = $directory.'/'.$class.'.php';
       if (is_readable($file)) {
-        require $this;
+        require $file;
       }
     }
   }
