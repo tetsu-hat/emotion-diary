@@ -44,13 +44,11 @@ class DbManager
     }
     return $this->repositories[$repository_name];
     }
-    return false;
 
   }
   //DB接続の解放
-  public function release() {
-    unset($this->connection);
-
+  public function __destruct() {
     unset($this->repositories);
+    unset($this->connection);
   }
 }
