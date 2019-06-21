@@ -1,13 +1,26 @@
 <?php
 class View
 {
-  //todo viewディレクトリまでのパス、DBから取得した値、titleの値を格納するプロパティ
+  //viewディレクトリまでのパス、DBから取得した値、titleの値を格納するプロパティ
+  protected $directory_path;
+  protected $parameters;
+  protected $titles;
+  //コンストラクタ viewディレクトリまでのパス、DBから取得した値を格納
+  public function __construct($path, $parameters) {
+    $this->directory_path = $path;
+    $this->parameters = $parameters;
+  }
+  //titleの値を格納する
+  public function setTitle($name, $value) {
+    $this->titles[$name] = $value;
+  }
 
-  //todo コンストラクタ viewディレクトリまでのパス、DBから取得した値を格納
+  //出力内容を構成してそれを返す。
+  public function render() {
 
-  //todo titleの値を格納する
-
-  //todo 出力内容を構成してそれを返す。
-
-  //todo エスケープ処理
+  }
+  //エスケープ処理
+public function escape($string) {
+  return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+}
 }
