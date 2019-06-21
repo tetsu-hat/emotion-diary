@@ -2,15 +2,16 @@
 class Request
 {
   //リクエストがPOSTか判定
-  public function isPost() {
+  public function isPost()
+  {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
   //リクエスト$_GETを取得して返す
-  public function getGet($name) {
+  public function getGet($name)
+  {
     if(isset($_GET[$name])) {
       return $_GET[$name];
     }
@@ -18,7 +19,8 @@ class Request
   }
 
   //リクエスト$_POSTを取得して返す
-  public function getPost($name) {
+  public function getPost($name)
+  {
     if(isset($_POST[$name])) {
       return $_POST[$name];
     }
@@ -26,7 +28,8 @@ class Request
   }
 
   // HOSTを返す、ない場合はサーバ名を返す
-  public function getHost() {
+  public function getHost()
+  {
     if (isset($_SERVER['HTTP_HOST'])) {
       return $_SERVER['HTTP_HOST'];
     }
@@ -34,7 +37,8 @@ class Request
   }
 
   //sslか判定
-  public function isSsl() {
+  public function isSsl()
+  {
     if ($_SERVER['HTTPS'] !== null) {
       return true;
     }
@@ -42,13 +46,15 @@ class Request
   }
 
   //uriを取得して返す
-  public function getUri() {
+  public function getUri()
+  {
     return $_SERVER['REQUEST_URI'];
   }
 
   //ベースURLを返す
   //注:ベースURLはこのアプリに置ける造語。ホスト部分より後ろからフロントコントローラまでの値のこと
-  public function baseUrl() {
+  public function baseUrl()
+  {
     $script_name = $_SEVER['SCRIPT_NAME'];
     $request_uri = $this->getUri();
 
@@ -61,7 +67,8 @@ class Request
   }
 
   //ファイルパスの取得
-  public function getPathInfo() {
+  public function getPathInfo()
+  {
     // リクエストからベースUrlと?以下を取り除く
     $request_uri = $this->getUri();
     $base_url = $this->baseUrl();
