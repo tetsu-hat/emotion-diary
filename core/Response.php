@@ -18,9 +18,9 @@ class Response
     echo $this->content;
   }
   //contentに出力内容を格納
-  public function store($internal_buffer)
+  public function store($output_content)
   {
-    $this->content = $internal_buffer;
+    $this->content = $output_content;
   }
 
   //ステータスコードをセットする
