@@ -30,7 +30,7 @@ abstract class Application
 
   //最低限の準備のため各クラスのインスタンス化と格納
   protected function initialize()
-   {
+  {
     $this->request = new Request();
     $this->router = new Router($this->registerRoutes());
     $this->session = new Sesison();
@@ -46,7 +46,7 @@ abstract class Application
 
   //各インスタンスを返す
   public function getRequest()
-   {
+  {
     return $this->request;
   }
 
@@ -61,18 +61,18 @@ abstract class Application
   }
 
   public function getDbManager()
-   {
+  {
     return $this->request;
   }
 
   public function getResponse()
-   {
+  {
     return $this->response;
   }
   //各ディレクトリまでのパスを返す
   public function getControllersDir()
   {
-return $this->getDirectoryRoot().'/controllers';
+    return $this->getDirectoryRoot().'/controllers';
   }
 
   public function getViwesDir()
@@ -80,22 +80,77 @@ return $this->getDirectoryRoot().'/controllers';
     return $this->getDirectoryRoot().'/views';
   }
 
-  //todo リクエストを受けてから出力に至るまでの全体の流れの処理
+  //リクエストを受けてから出力に至るまでの全体の流れの処理
   public function run()
   {
+    try{
+      $parameters = $this->router->pathMatch($this->request->getPathInfo());
 
+      if($parameters) {
+        throw new HttpNotFoundException('Not route found for '.$this->request->getPathInfo());
+      }
+      $controller = $parameters['controller'];
+      $action = $parameters['action'];
+      //ここでコントローラの実行
+      $this->runControllerAction($controller, $action, $parameters);
+
+    }catch(HttpNotFoundException $e){
+      $this->render404($e);
+    }catch(UnauthenticatedActionException $e) {
+      $controller = $this->signin_action['controller'];
+      $action = $this->signin_action['action'];
+      $this->runControllerAction($controller, $action, array());
+    }
+    //出力処理
+    $this->response->output();
   }
 
-  //todo 404出力
+  //404出力
   public function render404($e)
   {
+    $this->router->setStatusCode('404', 'not found');
+    if($this->debug) {
+      $message = $e->getMessage().'not found';
+    } else {
+      $message = 'not found';
+    }
+    $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
 
+    $output_content = <<<EOT
+    <!DOCTYPE html>
+    <html lang="ja">
+    <head>
+    <meata charset="utf-8">
+    <title>404</title>
+    <head>
+    <body>
+    $message
+    </body>
+EOT;
+
+    $this->response->store($output_content);
   }
 
-  //todo コントローラの呼び出しから出力内容を返す処理まで
-  public function runActionController()
+  //コントローラの呼び出しから出力内容を返す処理まで
+  public function runControllerAction($controller, $action, $parameters)
   {
+    //コントローラの有無を確認してあればそのファイルを読み込みクラスをインスタンス化
+    $controller_name = ucfirst($controller).'Controller';
+    $controller_file = $this->getControllersDir().$controller_name.'.php';
 
+    if (!class_exists($controller_name)) {
+    if (is_readable($controller_file)) {
+      require_once($controller_file);
+    } else {
+      throw new HttpNotFoundException('Not class found for '.$controller_name);
+    }
+  }
+
+      $controller = new $controller_name($this);
+
+      $content = $controller->run($action,$parameters);
+
+      $this->response->store($content);
   }
 
 }
