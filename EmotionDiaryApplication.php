@@ -1,7 +1,7 @@
 <?php
 class EmotionDiaryApplication extends Application
 {
-  protected $login_action = array('account', 'signin');
+  protected $signin_action = array('controller'=>'account', 'action'=>'signin');
 
   //親ディレクトリのパスを取得
   public function getDirectoryRoot()
