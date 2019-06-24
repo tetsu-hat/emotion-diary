@@ -48,7 +48,7 @@ class Session
   }
 
   //ログイン状況の判定の値を定義
-  public function serAuthenticated($bool)
+  public function setAuthenticated($bool)
   {
     $this->set('_authenticated', $bool) ;
     $this->redefinitionSessionId();
