@@ -39,7 +39,7 @@ class Request
   //sslか判定
   public function isSsl()
   {
-    if ($_SERVER['HTTPS'] !== null) {
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
       return true;
     }
     return false;
