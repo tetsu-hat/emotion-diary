@@ -16,11 +16,29 @@ class View
   }
 
   //出力内容を構成してそれを返す。
-  public function render() {
+  public function render($path,$elements, $layout = false) {
+    $path = $this->directory_path.'/'.$path.'.php';
 
+    extract(array_merge($this->parameters,$elements));
+
+    ob_start();
+    ob_implicit_flush(0);
+
+    require $path;
+
+    $content = ob_get_clean();
+
+    $_layout = $layout;
+
+    if ($_layout !== false) {
+      $elements = array_merge(array('buffered_content'=>$content),$this->elements);
+      $this->render($_layout,$elements);
+    }
+
+    return $content;
   }
   //エスケープ処理
-public function escape($string) {
-  return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
-}
+  public function escape($string) {
+    return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+  }
 }
