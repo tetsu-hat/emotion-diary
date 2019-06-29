@@ -31,7 +31,7 @@ class View
     $_layout = $layout;
 
     if ($_layout !== false) {
-      $elements = array_merge(array('buffered_content'=>$content),$this->elements);
+      $elements = array_merge($this->elements, array('layout_content'=>$content));
       $this->render($_layout,$elements);
     }
 
