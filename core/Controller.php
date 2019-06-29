@@ -26,7 +26,7 @@ abstract class Controller
     $this->action_name = $action;
     $this->action_method = $action.'Action';
     //メソッドが存在するか確認。しなければmove404へ
-    if(!$this->isAction($action_name,$controller_actions)) {
+    if(!$this->isAction($action_name,$this->controller_actions)) {
       return  $this->move404();
     };
     //メソッドが存在したけれどサインインしていない場合
@@ -68,7 +68,7 @@ abstract class Controller
     $this->response->setRedirectHeaders($name, $url);
   }
   //viewクラスをインスタンス化して見た目を構成していく
-  public function render($parameters, $specified_path = null, $layout = 'layout')
+  protected function render($parameters, $specified_path = null, $layout = 'layout')
   {
     $views_directory_path = $this->application-> getViwesDir();
 
@@ -77,15 +77,50 @@ abstract class Controller
       'session'=>$this->session
     );
 
-      $view = new View($views_directory_path, $parameters);
+    $view = new View($views_directory_path, $parameters);
 
-      if($specified_path = null) {
-        $path = $this->controller_name.'/'.$this->action_name;
-      } else {
-          $path = $this->controller_name.'/'.$specified_path;
-      }
-      $content = $view->render($path, $parameters, $layout);
-      return $content;
+    if($specified_path = null) {
+      $path = $this->controller_name.'/'.$this->action_name;
+    } else {
+      $path = $this->controller_name.'/'.$specified_path;
     }
+    $content = $view->render($path, $parameters, $layout);
+    return $content;
+  }
+
+  //CSRF対策
+  protected function generateCsrfToken($name)
+  {
+    $token_key = 'scrf_token'.$name;
+
+    $token = password_hash($token_key.microtime().session_id(), PASSWORD_DEFAULT);
+
+    $tokens = $this->session->get($token_key,array());
+
+    if (count($tokens) >= 5) {
+      $tokens = array_values(array_shift($tokens));
+    }
+    array_push($tokens,$token);
+    $this->session->set($token_key, $tokens);
+
+    return $token;
 
   }
+
+  protected function checkCsrfToken($name,$posted_token)
+  {
+    $token_key = 'csrf_token'.$name;
+    $tokens = $this->session->get($token_key,array());
+
+    $key = array_serch($token_key, $tokens,true);
+    if ($key !== false) {
+      unset($tokens[$key]);
+      $tokens = array_values($tokens);
+      $this->session->set($token_key, $token);
+      return true;
+    }
+    return false;
+
+  }
+
+}
