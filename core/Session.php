@@ -18,12 +18,12 @@ class Session
     $_SESSION[$name] = $value;
   }
   //$_SESSION['hoge']を取得。ない場合はnullを。
-  public function get($name)
+  public function get($name,$premise = null)
   {
     if(isset($_SESSION[$name])) {
       return $_SESSION[$name];
     }
-    return null;
+    return $premise;
   }
 
   //$_SESSION['hoge']をunset
