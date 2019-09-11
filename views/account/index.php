@@ -1,46 +1,67 @@
-<?php$this->setLayout('title','トップページ') ?>
+<?php $this->setTitle('title','トップページ') ?>
 
 <div>
+  <div class="topImage">
+  <img src="<?php echo $this->escape($stage_url);?>images/noteImage1.jpg">
+  </div>
   <article>
     <!-- 今日の日付 -->
     <p>今日は
-    <?php if (isset($today)){echo $this->escape(date('Y.m/d (D)',$today));}else{echo '取得失敗';}?>
-  </p>
+      <?php if (isset($today)){echo $this->escape(date('Y年m月d日 (D)',strtotime($today)));}else{echo '取得失敗';}?>
+    </p>
   </article>
-  <article>
+
+  <div class="record">
+  <article class="diaryCount">
     <!-- 日記を書いた日数,内容数 -->
-    <p>日記を書いた日数：<?php if(isset($count_diary)){echo $this->escape($count_diary);}else{echo '取得失敗';} ?>日</p>
-    <p>日記の内容数:<?php if(isset($count_contents)){echo $this->escape($count_contents);}else{echo '取得失敗';}?>件</p>
+    <p class="up">日記を書いた日数：<?php if(isset($count_days['get_value'])){echo $this->escape($count_days['get_value']);}else{echo '取得失敗';} ?>日</p>
+    <p class="down">日記の内容数 : <?php if(isset($count_contents['get_value'])){echo $this->escape($count_contents['get_value']);}else{echo '取得失敗';}?>件</p>
+      <p><a href="<?php echo $base_url; ?>/account/emotions"><p>詳しく見る</a></p>
   </article>
 
-  <article>
-    <!-- 感情数、感情割合(非表示可能) -->
-    <p>感情ポジネガ他のそれぞれの総計</p>  <!--tableタグで作成? -->
-    forで3回 0はポジ 1はネガ 2は他
-    <?php if (isset($count_devides)){echo ($this->escape($count_devides['name'])).':'.($this->escape($count_devides['count']));}else{echo '取得失敗';}?>
-      <?php if (isset($percentage_emotions_devides)){echo ($this->escape($percentage_emotions_devides));}else{echo '取得失敗';}?>
-      <p><a>詳しく見る</a></p>
-    </article>
+  <article class="emotionTable">
+    <table>
+      <tr>
+        <th>分類</th>
+        <th>内容数</th>
+      </tr>
+      <?php for($i=0;$i<count($count_emotions_devides);$i++):?>
+        <tr>
+          <td><?php if (isset($emotion_devides)){echo ($this->escape($emotion_devides[$i]['name']));}?></td>
+          <td class="countDevide"><?php if (isset($count_emotions_devides)){echo ($this->escape($count_emotions_devides[$i] ['get_value']));}?></td>
+        </tr>
+      <?php endfor;?>
+    </tr>
+  </table>
 
-    <article>
-      <form action=".../diary/index.php" method="post">
-        <select name="year">
-          <?php for($i=0;$i++;$i<$count_year):?>
-            <option value="<?php ?>"><?php ?></option>
-          <?php endfor;?>
-        </select>
-        <select name="month">
-          <?php for($i=0;$i++;$i<12):?>
-            <option value="<?php echo $this->escape($i+1);?>"><?php $this->escape($i+1);?></option>
-          <?php endfor;?>
-        </select>
-        <select name="day">
-          <?php for($i=0;$i++;$i<31):?>
-            <option value="<?php echo $this->escape($i+1);?>"><?php echo $this->escape($i+1);?></option>
-          <?php endfor;?>
-        </select>
-        <button type="submit">の日記を開く</button>
-      </form>
+  </article>
+</div>
 
-    </article>
+  <article class="openDiary">
+    <form action="<?php echo $this->escape($base_url); ?>/diary/index" method="post">
+      <p>
+      <select name="year">
+        <?php for($i=0;$i<$select_year['period'];$i++):?>
+          <option value="<?php echo $this->escape($select_year['last']-$i); ?>" <?php if(($select_year['last']-$i)==$select_year['last']){echo 'selected';} ?> ><?php echo $this->escape($select_year['last']-$i); ?></option>
+        <?php endfor;?>
+      </select>
+      年
+      <select name="month">
+        <?php for($i=0;$i<12;$i++):?>
+          <option value="<?php echo $this->escape($i+1);?>" <?php if(($i+1)==date("n",strtotime($today))){echo 'selected';} ?> ><?php echo $this->escape($i+1);?></option>
+        <?php endfor;?>
+      </select>
+      月
+      <select name="day">
+        <?php for($i=0;$i<31;$i++):?>
+          <option value="<?php echo $this->escape($i+1);?>" <?php if(($i+1)==date("j",strtotime($today))){echo 'selected';} ?> ><?php echo $this->escape($i+1);?></option>
+        <?php endfor;?>
+      </select>
+      日の<button type="submit">日記を開く</button>
+    </p>
+    </form>
+  </article>
+  <div class="diaryImage">
+  <img src="<?php echo $this->escape($stage_url);?>images/noteImage9.jpg">
   </div>
+</div>
