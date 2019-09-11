@@ -2,44 +2,48 @@
 class EmotionDiaryApplication extends Application
 {
   protected $signin_action = array('controller'=>'account', 'action'=>'signin');
-
   //親ディレクトリのパスを取得
   public function getDirectoryRoot()
   {
     return dirname(__FILE__);
   }
-
   //ルーティング定義
   public function registerRoutes()
   {
     return array(
-      '/'	//サインインしているときのトップページ
-      =>array('controller' =>' account', 'action' => 'index'),
-      '/account/signin'	//サインインページの表示
-      =>array('contoroller'=>'account', 'action' => 'signin'),
-      '/account/authenticate' //入力チェック
+      '/'
+      =>array('controller' =>'account', 'action' => 'index'),
+      '/account/signin'
+      =>array('controller'=>'account', 'action' => 'signin'),
+      '/account/authenticate'
       =>array('controller'=>'account', 'action'=>'authenticate'),
-      '/account/signup' //登録ページ
+      '/account/signup'
       =>array('controller'=>'account', 'action'=>'signup'),
-      '/account/signup/:action' //入力チェック(confirmAction),確認ページ(reviewAction)や登録(registerAction)
+      '/account/signup/:action'
       =>array('controller'=>'account'),
-      '/personal'	//自身の登録情報閲覧ページ
+      '/account/signout'
+      =>array('controller'=>'account', 'action'=>'signout'),
+      '/account/emotions'
+      =>array('controller'=>'account', 'action'=>'emotions'),
+      '/personal'
       =>array('controller'=>'personal', 'action'=>'index'),
-      '/personal/:action' //編集ページ(edit)、入力チェック(confirmAction)、編集内容確認ページ(reviewAction)、登録(registerAction)
+      '/personal/:action'
       =>array('controller'=>'personal'),
-      '/diary/:action/:page' //閲覧(index)、編集(edit)、:pageは日記の年月日(Y-m-d)形式
+      '/diary/:action/:date'
       =>array('controller'=>'diary'),
+      '/diary/:action' 
+      =>array('controller'=>'diary'),
+      '/service/:action'
+      =>array('controller'=>'service'),
     );
   }
-
   //データベース接続
   protected function configureConnection()
   {
     $this->db_manager->connect(array(
-      'dsn' => 'mysql:dbname=hogepiyo;host=localhost',
+      'dsn' => 'mysql:dbname=emo_diary;host=localhost;charset=utf8;',
       'user' => 'root',
       'password' =>'',
     ));
   }
-
 }
