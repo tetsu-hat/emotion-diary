@@ -2,22 +2,25 @@
 class Session
 {
   //セッションが使える状況、セッション状況の判定、ログイン状況の判定に使うプロパティ
-  protected $session_started = false;
-  protected $authenticated = false;
+  protected static $session_started = false;
+  protected static $authenticated = false;
   //コンストラクタ セッションスタートしてるか確認してスタート
   public function __construct()
   {
-    if($session_started !== false) {
+    if(self::$session_started === false) {
       session_start();
-      $this->session_started = true;
+      self::$session_started = true;
+      header("Cache-Control: no-cache");
+      header("Pragma: no-cache");
+      header("Expires:-1");
     }
   }
-  //$_SESSION['hoge']に値を格納する
+
   public function set($name, $value)
   {
     $_SESSION[$name] = $value;
   }
-  //$_SESSION['hoge']を取得。ない場合はnullを。
+
   public function get($name,$premise = null)
   {
     if(isset($_SESSION[$name])) {
@@ -26,27 +29,23 @@ class Session
     return $premise;
   }
 
-  //$_SESSION['hoge']をunset
   public function release($name)
   {
     unset($_SESSION[$name]);
   }
-
   //$_SESSIONをclear
   public function clear()
   {
     $_SESSION = array();
   }
-
   //sessionIdの再定義
   public function redefinitionSessionId()
   {
     if($this->authenticated !==true) {
-      session_regenerate_id($delete_old_session = true);
+      session_regenerate_id();
       $this->authenticated =true;
     }
   }
-
   //ログイン状況の判定の値を定義
   public function setAuthenticated($bool)
   {
@@ -56,6 +55,6 @@ class Session
   //ログイン状況の判定の値を取得
   public function isAuthenticated()
   {
-    return get('_authenticated');
+    return $this->get('_authenticated');
   }
 }
