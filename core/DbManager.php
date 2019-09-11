@@ -22,7 +22,6 @@ class DbManager
     );
 
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     $this->connection = $pdo;
   }
   //現在connectionプロパティに格納されているインスタンスを返す
@@ -41,7 +40,7 @@ class DbManager
     if (isset($repository_class)) {
       //hogeRepositoryインスタンスがすでに存在するか
       if (!isset($this->repositories[$repository_name])) {
-        $repository = new $repository_class($this->connection);
+        $repository = new $repository_class($this->getConnection());
         $this->repositories[$repository_name] = $repository;
         return $repository;
       }
