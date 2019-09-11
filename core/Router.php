@@ -6,9 +6,8 @@ class Router
   //todo コンストラクタ 下記を実行
   public function __construct($route_definitions)
   {
-    $this->routes = $this->normalizeRoutes($route_definitions)
+    $this->routes = $this->normalizeRoutes($route_definitions);
   }
-
   // ルーティング定義配列中の動的パラメータ指定を正規表現で扱える形式に変換して返す
   // ルーティング中の『/:』の箇所の正規化
   public function normalizeRoutes($route_definitions)
@@ -28,7 +27,6 @@ class Router
     }
     return $routes;
   }
-
   //パスと正規化したルーティングのマッチした値を返す
   public function pathMatch($path)
   {
@@ -38,9 +36,10 @@ class Router
     }
     //$this->routesとマッチングを行う。
     //マッチしたら:hoge等の箇所を名前付きで値を取得し元の配列に加えて返す。falseの時はfalseを返す。
-    foreach($routes as $route => $parameters) {
-      if(preg_match('#^'.$route.'$#', $path, $matches) {
-        return array_merge($parameters,$matches);
+    foreach($this->routes as $route => $parameters) {
+      if(preg_match('#^'.$route.'$#', $path, $matches)) {
+        $parameters = array_merge($parameters,$matches);
+        return $parameters;
       }
     }
     return false;
