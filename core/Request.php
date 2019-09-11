@@ -13,20 +13,18 @@ class Request
   public function getGet($name)
   {
     if(isset($_GET[$name])) {
-      return $_GET[$name];
+      return htmlspecialchars($_GET[$name], ENT_QUOTES, 'UTF-8');
     }
     return null;
   }
-
   //リクエスト$_POSTを取得して返す
   public function getPost($name)
   {
     if(isset($_POST[$name])) {
-      return $_POST[$name];
+      return htmlspecialchars($_POST[$name], ENT_QUOTES, 'UTF-8');
     }
     return null;
   }
-
   // HOSTを返す、ない場合はサーバ名を返す
   public function getHost()
   {
@@ -35,7 +33,6 @@ class Request
     }
     return $_SERVER['SERVER_NAME'];
   }
-
   //sslか判定
   public function isSsl()
   {
@@ -44,28 +41,24 @@ class Request
     }
     return false;
   }
-
   //uriを取得して返す
   public function getUri()
   {
     return $_SERVER['REQUEST_URI'];
   }
-
   //ベースURLを返す
-  //注:ベースURLはこのアプリに置ける造語。ホスト部分より後ろからフロントコントローラまでの値のこと
+  //注:ベースURLは造語。ホスト部分より後ろからフロントコントローラまでの値のこと
   public function baseUrl()
   {
-    $script_name = $_SEVER['SCRIPT_NAME'];
+    $script_name = $_SERVER['SCRIPT_NAME'];
     $request_uri = $this->getUri();
-
-    if (strpos($request_uri, $script_name === 0)) {
+    if (strpos($request_uri, $script_name)===0) {
       return $script_name;
-    } else if (strpos($request_uri, dirname($script_name) === 0)) {
+    } else if (strpos($request_uri, dirname($script_name))===0) {
       return rtrim(dirname($script_name), '/');
     }
     return "";
   }
-
   //ファイルパスの取得
   public function getPathInfo()
   {
@@ -73,9 +66,21 @@ class Request
     $request_uri = $this->getUri();
     $base_url = $this->baseUrl();
     if(strpos($request_uri, '?') !== false){
-      $hoge = strstr($request_uri, '?', false );
-      return $path_info = ltrim(rtrim($request_uri, $hoge), $base_url);
+      $get_path = strstr($request_uri, '?', false );
+      return $path_info = substr(rtrim($request_uri, $get_path), strlen($base_url));
     }
-    return $path_info = ltrim($request_uri, $base_url);
+    return $path_info = substr($request_uri, strlen($base_url));
+  }
+
+  public function getPathStage(){
+    $request_uri = $this->getUri();
+    $script_name = $_SERVER['SCRIPT_NAME'];
+    $path =str_replace($script_name, '', $request_uri);
+    $number_stage = mb_substr_count($path,'/');
+    $stage='';
+    for($i=0;$i<$number_stage;$i++){
+      $stage.='../';
+    }
+    return $stage;
   }
 }
