@@ -226,6 +226,39 @@ table th{
     padding-right: 1rem;
 }
 
+/* 以下吹き出し(ツールチップ) */
+.emotionsSelect option {
+	position: relative;
+}
+.emotionsSelect option:hover {
+	background: #deb3ba;
+}
+#emotions-tooltips {
+	display: block;
+	position: relative;
+	bottom: -0.8em;
+	left: 0.3em;
+	z-index: 100;
+	width: 20em;
+	height: auto;
+	padding: 0.3em 0.5em;
+	color: #FFFFFF;
+	background: #c72439;
+	border-radius: 0.5em;
+}
+/* 擬似要素の作成? */
+#emotions-tooltips:after {
+	width: 100%;
+	content: "";
+	display: block;
+	position: absolute;
+	left: 18em;
+	top: -5px;
+	border-top:8px solid transparent;
+	border-left:8px solid #c72439;
+}
+/* 以上吹き出し(ツールチップ) */
+
 @media screen and (min-width:768px) and ( max-width:1024px) {
   /*for PC*/
   body {
