@@ -239,11 +239,12 @@ table th{
 	bottom: -0.8em;
 	left: 0.3em;
 	z-index: 100;
-	width: 20em;
+	width: 24em;
 	height: auto;
 	padding: 0.3em 0.5em;
-	color: #FFFFFF;
-	background: #c72439;
+	color: #992F3C;
+  border:2px solid #D56F68;
+	background: #ECAEA6;
 	border-radius: 0.5em;
 }
 /* 擬似要素の作成? */
@@ -253,9 +254,9 @@ table th{
 	display: block;
 	position: absolute;
 	left: 18em;
-	top: -5px;
+	top: -8px;
 	border-top:8px solid transparent;
-	border-left:8px solid #c72439;
+	border-left:8px solid #D56F68;
 }
 /* 以上吹き出し(ツールチップ) */
 
